@@ -39,3 +39,34 @@ const nandGate = (a, b) => {
 const xorGate = (a, b) => {
     return andGate(orGate(a, b), nandGate(a, b))
 }
+
+
+/**
+ * Half adder
+ */
+const halfAdder = (a, b) => {
+    const sumOut = xorGate(a, b)
+    const carryOut = andGate(a, b)
+
+    return `${sumOut}${carryOut}`
+}
+
+/**
+ * Full adder
+ */
+const fullAdder = (a, b, cin) => {
+    // First, we need the Sum out of the first adder
+    const firstAdderOutput = halfAdder(a, b)
+    const firstSumOut = parseInt(firstAdderOutput[0])
+    const firstCarryOut = parseInt(firstAdderOutput[1])
+
+    // Then we pass Carry In, First Sum Out as A B to the second adder
+    const secondAdderOutput = halfAdder(cin, firstSumOut)
+    const secondSumOut = parseInt(secondAdderOutput[0])
+    const secondCarryOut = parseInt(secondAdderOutput[1])
+
+    // Then we pass the first Carry Out, and the second Carry Out as inputs to the OR gate
+    const orGateOutput = orGate(secondCarryOut, firstCarryOut)
+
+    return `${secondSumOut}${orGateOutput}`
+}
